@@ -48,7 +48,7 @@ const CrearProducto = () => {
               },
             })}
           />
-          <Form.Text className="text-danger">
+          <Form.Text className="text-danger w-100">
             {errors.nombreProducto?.message}
           </Form.Text>
         </Form.Group>

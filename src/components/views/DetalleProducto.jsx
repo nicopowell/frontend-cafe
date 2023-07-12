@@ -1,32 +1,59 @@
+import { useEffect, useState } from "react";
 import { Container, Card, Row, Col } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
+import { consultaProducto } from "../helpers/queries";
+import Swal from "sweetalert2";
 
 const DetalleProducto = () => {
+  const { id } = useParams();
+  const navegacion = useNavigate();
+  const [producto, setProducto] = useState();
+  const [existeProducto, setExisteProducto] = useState(true);
+
+  useEffect(() => {
+    consultaProducto(id).then((respuesta) => {
+      if (respuesta._id) {
+        setExisteProducto(true);
+        setProducto(respuesta);
+      } else {
+        Swal.fire("Ocurrio un error", `No pudimos encontrar el producto que buscas`, "error");
+        setExisteProducto(false);
+      }
+    });
+  }, [id]);
+  if (!producto) {
+    return null;
+  }
+
   return (
-    <Container className="my-3 mainSection">
-      <Card>
-        <Row>
-          <Col md={6}>
-            <Card.Img
-              variant="top"
-              src="https://images.pexels.com/photos/10273537/pexels-photo-10273537.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-            />
-          </Col>
-          <Col md={6}>
-            <Card.Body>
-              <Card.Title>MOCHACCINO CANELA</Card.Title>
-              <hr />
-              <Card.Text>
-              Combinación perfecta entre leche, choclate, café intenso y un toque de canela. Café con granos 100% de arábica brasileña. Todo en una capsula inteligente.
-              <br/>
-              <br/>
-              <span className="text-danger fw-semibold ">Categoria:</span> Café
-              <br />
-              <span className="text-danger fw-semibold ">Precio:</span> $1.740,00</Card.Text>
-            </Card.Body>
-          </Col>
-        </Row>
-      </Card>
-    </Container>
+    <>
+      {existeProducto ? (
+        <Container className="mainSection">
+          <Card className="my-5">
+            <Row>
+              <Col md={6}>
+                <Card.Img className="imagenDetalle" variant="top" src={producto.imagen} alt={producto.nombreProducto} />
+              </Col>
+              <Col md={6}>
+                <Card.Body>
+                  <Card.Title>{producto.nombreProducto}</Card.Title>
+                  <hr />
+                  <Card.Text>
+                    {producto.descripcion}
+                    <br />
+                    <span className="fw-bold ">Categoria:</span> {producto.categoria}
+                    <br />
+                    <span className="fw-bold ">Precio:</span> {producto.precio}
+                  </Card.Text>
+                </Card.Body>
+              </Col>
+            </Row>
+          </Card>
+        </Container>
+      ) : (
+        navegacion("/404")
+      )}
+    </>
   );
 };
 

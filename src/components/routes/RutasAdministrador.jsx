@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Administrador from "../views/Administrador";
 import CrearProducto from "../views/producto/CrearProducto";
 import EditarProducto from "../views/producto/EditarProducto";
+import EditarUsuario from "../views/usuarios/EditarUsuario"
 
 
 const RutasAdministrador = () => {
@@ -22,6 +23,11 @@ const RutasAdministrador = () => {
           exact
           path="/editar-producto/:id"
           element={<EditarProducto></EditarProducto>}
+        ></Route>
+        <Route
+          exact
+          path="/editar-usuario/:id"
+          element={<EditarUsuario></EditarUsuario>}
         ></Route>
       </Routes>
     </>
